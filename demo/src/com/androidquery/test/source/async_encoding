@@ -1,0 +1,8 @@
+	public void async_encoding(){
+		
+		//Using String.class type will attempt to detect the encoding of a page and transform it to utf-8
+		
+		String url = "http://114.xixik.com/gb2312_big5/";
+		aq.progress(R.id.progress).ajax(url, String.class, 0, this, "encodingCb");
+		
+	}

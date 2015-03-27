@@ -1,0 +1,280 @@
+Test auto push 13.
+
+public void asyncHtml(){
+	
+//fetch Google's homepage in html
+
+String url = "http://www.google.com";
+
+aq.ajax(url, String.class, new AjaxCallback<String>() {
+
+	@Override
+	public void callback(String url, String html, AjaxStatus status) {
+		
+	}
+	
+});
+	
+	
+}
+
+public void asyncJson(){
+	
+	//perform a Google search in just a few lines of code
+	
+	String url = "http://www.google.com/uds/GnewsSearch?q=Obama&v=1.0";
+	
+	aq.ajax(url, JSONObject.class, new AjaxCallback<JSONObject>() {
+
+		@Override
+		public void callback(String url, JSONObject json, AjaxStatus status) {
+			
+			
+			if(json != null){
+				
+				//successful ajax call, show status code and json content
+				Toast.makeText(aq.getContext(), status.getCode() + ":" + json.toString(), Toast.LENGTH_LONG).show();
+			
+			}else{
+				
+				//ajax error, show error code
+				Toast.makeText(aq.getContext(), "Error:" + status.getCode(), Toast.LENGTH_LONG).show();
+			}
+		}
+	});
+	
+}
+
+
+public void asyncBytes(){
+	
+//fetch a remote resource in raw bytes
+
+String url = "http://www.vikispot.com/z/images/vikispot/android-w.png";
+
+aq.ajax(url, byte[].class, new AjaxCallback<byte[]>() {
+
+	@Override
+	public void callback(String url, byte[] object, AjaxStatus status) {
+		Toast.makeText(aq.getContext(), "bytes array:" + object.length, Toast.LENGTH_LONG).show();
+	}
+});
+	
+	
+}
+
+public void asyncBitmap(){
+	
+	//fetch a image over the network
+	
+	String url = "http://www.vikispot.com/z/images/vikispot/android-w.png";
+	
+	aq.ajax(url, Bitmap.class, new AjaxCallback<Bitmap>() {
+
+		@Override
+		public void callback(String url, Bitmap object, AjaxStatus status) {
+			Toast.makeText(aq.getContext(), object.toString(), Toast.LENGTH_LONG).show();
+		}
+	});
+	
+}
+
+public void asyncJson(){
+	
+	//perform a Google search in just a few lines of code
+	
+	String url = "http://www.google.com/uds/GnewsSearch?q=Obama&v=1.0";		
+	aq.ajax(url, JSONObject.class, this, "jsonCallback");
+	
+}
+
+public void jsonCallback(String url, JSONObject json, AjaxStatus status){
+	
+	if(json != null){
+		
+		//successful ajax call, show status code and json content
+		Toast.makeText(aq.getContext(), status.getCode() + ":" + json.toString(), Toast.LENGTH_LONG).show();
+	
+	}else{
+		
+		//ajax error, show error code
+		Toast.makeText(aq.getContext(), "Error:" + status.getCode(), Toast.LENGTH_LONG).show();
+	}
+	
+}
+
+public class MainApplication extends Application{
+
+	
+	@Override
+    public void onCreate() {     
+          
+        //set the max number of concurrent network connections, default is 4
+		AjaxCallback.setNetworkLimit(8);
+
+		//set the max number of icons (image width <= 50) to be cached in memory, default is 20
+		BitmapAjaxCallback.setIconCacheLimit(20);
+
+		//set the max number of images (image width > 50) to be cached in memory, default is 20
+		BitmapAjaxCallback.setCacheLimit(40);		        
+        
+        super.onCreate();
+    }
+	
+	
+}
+
+
+public void onDestroy(){
+	
+	//stop all aync calls when current activity is exiting
+	AjaxCallback.cancel();
+	
+}
+
+protected void onDestroy(){
+	
+	super.onDestroy();
+	
+	//clean the file cache when root activity exit
+	//the resulting total cache size will be less than 3M
+	AQUtility.cleanCacheAsync(this);
+	
+}
+
+protected void onDestroy(){
+	
+	super.onDestroy();
+	
+	//clean the file cache with advance option
+	long triggerSize = 3000000; //starts cleaning when cache size is larger than 3M
+	long targetSize = 2000000;	//remove the least recently used files until cache size is less than 2M
+	AQUtility.cleanCacheAsync(this, triggerSize, targetSize);
+	
+	
+}
+
+
+public class MainApplication extends Application{
+
+	@Override
+	public void onLowMemory(){	
+
+		//clear all memory cache when system is in low memory
+		//note that you can configure the max image cache count, see CONFIGURATION
+    	BitmapAjaxCallback.clearCache();
+    }
+	
+}
+
+String imageUrl = "http://www.vikispot.com/z/images/vikispot/android-w.png";
+
+final int tint = 0x77AA0000;
+
+aq.id(R.id.image1).image(imageUrl, true, true, new BitmapAjaxCallback(){
+
+	@Override
+	public void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status){
+				
+		iv.setImageBitmap(bm);
+		
+		//do something to the bitmap
+		iv.setColorFilter(tint, PorterDuff.Mode.SRC_ATOP);
+		
+	}
+	
+});
+
+File file = new File(path);
+
+aq.id(R.id.avatar).image(file, false, 300, new BitmapAjaxCallback(){
+
+    @Override
+    public void callback(String url, ImageView iv, Bitmap bm, AjaxStatus status){
+    	
+    	iv.setImageBitmap(bm);
+        
+    	if(bm != null){
+            byte[] upload = toBytes(bm);                
+            writeAvatar(upload);
+            newAvatar = upload;
+    	}
+        
+    }
+    
+});
+
+
+public void async_post(){
+	
+	//do a twiiter search with a http post
+	
+    String url = "http://search.twitter.com/search.json";
+	
+	Map<String, Object> params = new HashMap<String, Object>();
+	params.put("q", "androidquery");
+	
+    aq.ajax(url, params, JSONObject.class, new AjaxCallback<JSONObject>() {
+
+        @Override
+        public void callback(String url, JSONObject json, AjaxStatus status) {
+               
+            showResult(json);
+           
+        }
+    });
+	
+}
+
+
+ArrayAdapter<JSONObject> aa = new ArrayAdapter<JSONObject>(this, R.layout.content_item_s, items){
+	
+	@Override
+	public View getView(int position, View view, ViewGroup parent) {
+		
+		if(view == null){
+			view = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.content_item_s, null);
+		}
+		
+		JSONObject jo = getItem(position);
+		
+		AQuery aq = new AQuery(view);
+		aq.id(R.id.name).text(jo.optString("titleNoFormatting", "No Title"));
+		aq.id(R.id.meta).text(jo.optString("publisher", ""));
+		
+		JSONObject image = jo.optJSONObject("image");
+		String tb = null;
+		if(image != null){
+			tb = image.optString("tbUrl");
+			aq.id(R.id.tb).visible().image(tb);
+		}else{
+			aq.id(R.id.tb).gone();
+		}
+		
+		
+		
+		return view;
+		
+	}
+};
+
+aq.id(R.id.list).adapter(aa);
+
+
+@Override
+protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    
+	Drawable draw = getDrawable();
+	
+	int vwidth = MeasureSpec.getSize(widthMeasureSpec);
+	int vheight = MeasureSpec.getSize(heightMeasureSpec);
+    
+	
+	if(draw != null){
+		double r = getRatio(draw);
+		vheight = (int) Math.ceil(vwidth * r);
+	}   
+	
+    setMeasuredDimension(vwidth, vheight);   
+    
+}

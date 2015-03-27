@@ -1,0 +1,16 @@
+	public void async_cached(){
+	    
+		String url = "http://www.google.com";
+		
+		long expire = 15 * 60 * 1000;
+		aq.ajax(url, String.class, expire, new AjaxCallback<String>() {
+
+	        @Override
+	        public void callback(String url, String html, AjaxStatus status) {
+	             
+	        	showResult(html);
+	        }
+		        
+		});
+	        
+	}

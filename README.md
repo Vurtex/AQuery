@@ -1,5 +1,21 @@
 Welcome to the androidquery GitHub home.
 
+Add it in your root build.gradle at the end of repositories:
+``` java
+   allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+Step 2. Add the dependency	
+``` java
+   dependencies {
+	        compile 'com.github.Vurtex:Android_Query:1.0'
+	}
+```
+
 Click [here](http://code.google.com/p/android-query/wiki/AsyncAPI) for wiki at GoogleCode
 or visit:
 http://code.google.com/p/android-query/wiki/AsyncAPI

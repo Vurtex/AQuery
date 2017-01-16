@@ -1,9 +1,0 @@
-	public void auth_twitter(){
-		
-		TwitterHandle handle = new TwitterHandle(this, CONSUMER_KEY, CONSUMER_SECRET);
-		
-		String url = "http://twitter.com/statuses/mentions.json";
-		aq.auth(handle).progress(R.id.progress).ajax(url, JSONArray.class, this, "twitterCb");
-		
-		
-	}
